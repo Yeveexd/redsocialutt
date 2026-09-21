@@ -1,0 +1,49 @@
+# RedSocialUTT
+
+## Instalación
+
+### Requisitos
+
+- Node.js 22+
+- pnpm 10+
+
+### Clonar el repositorio
+
+```bash
+git clone https://github.com/Yeveexd/redsocialutt.git
+cd redsocialutt
+```
+
+### Instalar dependencias
+
+Desde la raíz del proyecto:
+
+```bash
+pnpm install
+```
+
+Esto instalará las dependencias de Next.js, NestJS y Turborepo.
+
+### Variables de entorno
+
+Crear los archivos de variables de entorno correspondientes:
+
+```bash
+cp apps/api/.env.example apps/api/.env
+cp apps/web/.env.example apps/web/.env.local
+```
+
+Configurar los valores necesarios en cada archivo.
+
+### Ejecutar en desarrollo
+
+Desde la raíz:
+
+```bash
+pnpm dev
+```
+
+Esto iniciará las aplicaciones del monorepo:
+
+- Next.js: `http://localhost:3000`
+- NestJS: `http://localhost:8080`
