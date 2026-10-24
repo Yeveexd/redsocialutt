@@ -17,7 +17,7 @@ Repositorio del proyecto **RedSocialUTT**, una aplicación web organizada como m
 - [7. Flujo de trabajo con Git](#7-flujo-de-trabajo-con-git)
 - [8. Seguridad y buenas prácticas](#8-seguridad-y-buenas-prácticas)
 - [9. Diccionario de datos](#9-diccionario-de-datos)
-- [10. DER](#10-der)
+- [10. DER](#10-der-diagrama-entidad-relación)
 ---
 
 ## 1. Descripción del proyecto
