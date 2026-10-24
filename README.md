@@ -681,7 +681,7 @@ Para mantener un historial de versiones seguro y confiable:
 ---
 
 ## 10. DER (Diagrama entidad-relación)
-https://mermaid.ai/d/3c79588c-2066-4ed8-b8e6-436ac899caa3
+### 1. https://mermaid.ai/d/3c79588c-2066-4ed8-b8e6-436ac899caa3
 
 ---
 ### Conclusión
