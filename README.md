@@ -18,6 +18,7 @@ Repositorio del proyecto **RedSocialUTT**, una aplicación web organizada como m
 - [8. Seguridad y buenas prácticas](#8-seguridad-y-buenas-prácticas)
 - [9. Diccionario de datos](#9-diccionario-de-datos)
 - [10. DER](#10-der-diagrama-entidad-relación)
+- [11. Arquitectura](#11-arquitectura)
 ---
 
 ## 1. Descripción del proyecto
@@ -682,6 +683,11 @@ Para mantener un historial de versiones seguro y confiable:
 
 ## 10. DER (Diagrama entidad-relación)
 ### 1. https://mermaid.ai/d/3c79588c-2066-4ed8-b8e6-436ac899caa3
+
+---
+
+## 11. Arquitectura
+### 1. https://drive.google.com/file/d/1WyBpDqBOrwo5jUto6Dvm6itaRETDTzDI/view?usp=sharing
 
 ---
 ### Conclusión
