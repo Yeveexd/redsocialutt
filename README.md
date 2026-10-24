@@ -17,7 +17,7 @@ Repositorio del proyecto **RedSocialUTT**, una aplicación web organizada como m
 - [7. Flujo de trabajo con Git](#7-flujo-de-trabajo-con-git)
 - [8. Seguridad y buenas prácticas](#8-seguridad-y-buenas-prácticas)
 - [9. Diccionario de datos](#9-diccionario-de-datos)
-
+- [10. DER](#10-diagrama-entidad-relación)
 ---
 
 ## 1. Descripción del proyecto
@@ -678,7 +678,12 @@ Para mantener un historial de versiones seguro y confiable:
 | BOOLEAN | NOT NULL | `eliminado` | Chat eliminado de la lista del usuario. Por defecto FALSE. |
 | TIMESTAMPTZ | NOT NULL | `unido_en` | Fecha de ingreso al chat. |
 
+---
 
+### 10. DER (Diagrama entidad-relación)
+https://mermaid.ai/d/3c79588c-2066-4ed8-b8e6-436ac899caa3
+
+---
 ### Conclusión
 
 La combinación de Git y GitHub proporciona a RedSocialUTT un mecanismo de control de versiones distribuido, trazabilidad de cambios y colaboración. La organización monorepo permite administrar el frontend y el backend desde un único repositorio, mientras que la configuración de exclusiones, la gestión de credenciales y el control de accesos reducen los riesgos operativos y de seguridad.
