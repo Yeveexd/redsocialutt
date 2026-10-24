@@ -19,6 +19,7 @@ Repositorio del proyecto **RedSocialUTT**, una aplicación web organizada como m
 - [9. Diccionario de datos](#9-diccionario-de-datos)
 - [10. DER](#10-der-diagrama-entidad-relación)
 - [11. Arquitectura](#11-arquitectura)
+- [12. Maquetacion y prototipado](#12-maquetaciòn-y-prototipado)
 ---
 
 ## 1. Descripción del proyecto
@@ -688,6 +689,10 @@ Para mantener un historial de versiones seguro y confiable:
 
 ## 11. Arquitectura
 ### 1. https://drive.google.com/file/d/1WyBpDqBOrwo5jUto6Dvm6itaRETDTzDI/view?usp=sharing
+
+
+## 12. Maquetaciòn y prototipado
+### 1. https://www.figma.com/design/khlEFJWdvB9x46AE7IpBAc/Coyotegram?node-id=0-1&t=AiZ0C4V8pRnoHti7-1
 
 ---
 ### Conclusión
