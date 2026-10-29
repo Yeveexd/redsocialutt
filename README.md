@@ -696,8 +696,7 @@ Para mantener un historial de versiones seguro y confiable:
 ### 1. https://www.figma.com/design/khlEFJWdvB9x46AE7IpBAc/Coyotegram?node-id=0-1&t=AiZ0C4V8pRnoHti7-1
 
 ## 13. Casos De Uso
-![Caso de uso 1](imagen_caso_case_de_uso_01.jpge) 
-![Caso de uso 2](imagen_caso_case_de_uso_02.jpge)
+https://drive.google.com/drive/folders/1BQsHtlwezJ7D1yu8D8nsIoetZkyFvpwI?usp=share_link
 ---
 ### Conclusión
 
