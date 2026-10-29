@@ -694,6 +694,9 @@ Para mantener un historial de versiones seguro y confiable:
 ## 12. Maquetaciòn y prototipado
 ### 1. https://www.figma.com/design/khlEFJWdvB9x46AE7IpBAc/Coyotegram?node-id=0-1&t=AiZ0C4V8pRnoHti7-1
 
+## 13. Casos De Uso
+![imagen_caso_de_uso_01.jpg]
+![imagen_caso_de_uso_02.jpg]
 ---
 ### Conclusión
 
