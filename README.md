@@ -20,6 +20,7 @@ Repositorio del proyecto **RedSocialUTT**, una aplicación web organizada como m
 - [10. DER](#10-der-diagrama-entidad-relación)
 - [11. Arquitectura](#11-arquitectura)
 - [12. Maquetacion y prototipado](#12-maquetaciòn-y-prototipado)
+- [13. Casos de uso](#13-casos-de-uso)
 ---
 
 ## 1. Descripción del proyecto
