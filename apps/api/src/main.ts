@@ -1,5 +1,5 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule, ObserveInstrument } from './app.module.js';
+import { NestFactory } from "@nestjs/core";
+import { AppModule, ObserveInstrument } from "./app.module.js";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -7,8 +7,13 @@ async function bootstrap() {
   });
 
   app.enableCors({
-    origin: 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    origin: process.env.ORIGIN,
+    methods: process.env.METHODS?.split(",") ?? [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE",
+    ],
     credentials: true,
   });
 

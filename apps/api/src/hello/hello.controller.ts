@@ -1,18 +1,18 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get } from "@nestjs/common";
 
-@Controller('hello')
+@Controller("hello")
 export class HelloController {
   @Get()
   ColorRandom(): { color: string } {
     const colors = [
-      'Rosa',
-      'Azul',
-      'Morado',
-      'Verde',
-      'Amarillo',
-      'Naranja',
-      'Blanco',
-      'Negro',
+      "Rosa",
+      "Azul",
+      "Morado",
+      "Verde",
+      "Amarillo",
+      "Naranja",
+      "Blanco",
+      "Negro",
     ];
     const i = Math.floor(Math.random() * colors.length);
 
