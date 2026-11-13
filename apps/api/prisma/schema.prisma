@@ -1,0 +1,330 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model AMISTADES {
+  id                                          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  solicitante_id                              String    @db.Uuid
+  receptor_id                                 String    @db.Uuid
+  estado                                      String    @db.VarChar(10)
+  creado_en                                   DateTime  @default(now()) @db.Timestamptz(6)
+  respondido_en                               DateTime? @db.Timestamptz(6)
+  PERFILES_AMISTADES_receptor_idToPERFILES    PERFILES  @relation("AMISTADES_receptor_idToPERFILES", fields: [receptor_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PERFILES_AMISTADES_solicitante_idToPERFILES PERFILES  @relation("AMISTADES_solicitante_idToPERFILES", fields: [solicitante_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model AVISOS {
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  autor_id       String           @db.Uuid
+  titulo         String           @db.VarChar(150)
+  contenido      String
+  categoria      String           @db.VarChar(15)
+  urgente        Boolean
+  alcance        String           @db.VarChar(10)
+  carrera_id     Int?
+  cuatrimestre   Int?             @db.SmallInt
+  publicado_en   DateTime         @default(now()) @db.Timestamptz(6)
+  USUARIOS       USUARIOS         @relation(fields: [autor_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  CARRERAS       CARRERAS?        @relation(fields: [carrera_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  NOTIFICACIONES NOTIFICACIONES[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model BLOQUEOS {
+  bloqueador_id                             String   @db.Uuid
+  bloqueado_id                              String   @db.Uuid
+  creado_en                                 DateTime @default(now()) @db.Timestamptz(6)
+  USUARIOS_BLOQUEOS_bloqueado_idToUSUARIOS  USUARIOS @relation("BLOQUEOS_bloqueado_idToUSUARIOS", fields: [bloqueado_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  USUARIOS_BLOQUEOS_bloqueador_idToUSUARIOS USUARIOS @relation("BLOQUEOS_bloqueador_idToUSUARIOS", fields: [bloqueador_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([bloqueador_id, bloqueado_id])
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model CARRERAS {
+  id       Int        @id @default(autoincrement())
+  nombre   String     @unique @db.VarChar(100)
+  edificio String     @db.VarChar(100)
+  AVISOS   AVISOS[]
+  GRUPOS   GRUPOS[]
+  PERFILES PERFILES[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model CHATS {
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tipo          String          @db.VarChar(10)
+  nombre        String?         @db.VarChar(100)
+  creador_id    String          @db.Uuid
+  creado_en     DateTime        @default(now()) @db.Timestamptz(6)
+  USUARIOS      USUARIOS        @relation(fields: [creador_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  MENSAJES      MENSAJES[]
+  MIEMBROS_CHAT MIEMBROS_CHAT[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model COMENTARIOS {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  publicacion_id String        @db.Uuid
+  autor_id       String        @db.Uuid
+  contenido      String        @db.VarChar(500)
+  creado_en      DateTime      @default(now()) @db.Timestamptz(6)
+  eliminado_en   DateTime?     @db.Timestamptz(6)
+  USUARIOS       USUARIOS      @relation(fields: [autor_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PUBLICACIONES  PUBLICACIONES @relation(fields: [publicacion_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  REPORTES       REPORTES[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model GRUPOS {
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre         String           @db.VarChar(100)
+  descripcion    String?          @db.VarChar(300)
+  imagen_url     String?
+  tipo           String           @db.VarChar(15)
+  privacidad     String           @db.VarChar(10)
+  carrera_id     Int?
+  creador_id     String           @db.Uuid
+  creado_en      DateTime         @default(now()) @db.Timestamptz(6)
+  CARRERAS       CARRERAS?        @relation(fields: [carrera_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  USUARIOS       USUARIOS         @relation(fields: [creador_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  MIEMBROS_GRUPO MIEMBROS_GRUPO[]
+  REPORTES       REPORTES[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model MENSAJES {
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  chat_id      String       @db.Uuid
+  remitente_id String       @db.Uuid
+  contenido    String?
+  enviado_en   DateTime     @default(now()) @db.Timestamptz(6)
+  CHATS        CHATS        @relation(fields: [chat_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  USUARIOS     USUARIOS     @relation(fields: [remitente_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  MULTIMEDIA   MULTIMEDIA[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model MIEMBROS_CHAT {
+  chat_id    String   @db.Uuid
+  usuario_id String   @db.Uuid
+  rol        String   @db.VarChar(13)
+  fijado     Boolean  @default(false)
+  archivado  Boolean  @default(false)
+  eliminado  Boolean  @default(false)
+  unido_en   DateTime @default(now()) @db.Timestamptz(6)
+  CHATS      CHATS    @relation(fields: [chat_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  USUARIOS   USUARIOS @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([chat_id, usuario_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model MIEMBROS_GRUPO {
+  grupo_id   String   @db.Uuid
+  usuario_id String   @db.Uuid
+  rol        String   @db.VarChar(13)
+  unido_en   DateTime @default(now()) @db.Timestamptz(6)
+  GRUPOS     GRUPOS   @relation(fields: [grupo_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  USUARIOS   USUARIOS @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([grupo_id, usuario_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model MULTIMEDIA {
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  publicacion_id String?        @db.Uuid
+  mensaje_id     String?        @db.Uuid
+  tipo           String         @db.VarChar(10)
+  url            String
+  mime_type      String         @db.VarChar(50)
+  tamano_bytes   BigInt
+  creado_en      DateTime       @default(now()) @db.Timestamptz(6)
+  MENSAJES       MENSAJES?      @relation(fields: [mensaje_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PUBLICACIONES  PUBLICACIONES? @relation(fields: [publicacion_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model NOTIFICACIONES {
+  id                                           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuario_id                                   String         @db.Uuid
+  actor_id                                     String?        @db.Uuid
+  tipo                                         String         @db.VarChar(20)
+  aviso_id                                     String?        @db.Uuid
+  publicacion_id                               String?        @db.Uuid
+  leida                                        Boolean        @default(false)
+  creado_en                                    DateTime       @default(now()) @db.Timestamptz(6)
+  USUARIOS_NOTIFICACIONES_actor_idToUSUARIOS   USUARIOS?      @relation("NOTIFICACIONES_actor_idToUSUARIOS", fields: [actor_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  AVISOS                                       AVISOS?        @relation(fields: [aviso_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PUBLICACIONES                                PUBLICACIONES? @relation(fields: [publicacion_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  USUARIOS_NOTIFICACIONES_usuario_idToUSUARIOS USUARIOS       @relation("NOTIFICACIONES_usuario_idToUSUARIOS", fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model PERFILES {
+  id                                           String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuario_id                                   String      @unique @db.Uuid
+  nombre                                       String      @db.VarChar(80)
+  apellidos                                    String      @db.VarChar(100)
+  matricula                                    String?     @unique @db.VarChar(20)
+  carrera_id                                   Int?
+  cuatrimestre                                 Int?        @db.SmallInt
+  biografia                                    String?     @db.VarChar(500)
+  avatar_url                                   String?
+  color_fondo_perfil                           String?     @db.VarChar(20)
+  perfil_privado                               Boolean     @default(false)
+  AMISTADES_AMISTADES_receptor_idToPERFILES    AMISTADES[] @relation("AMISTADES_receptor_idToPERFILES")
+  AMISTADES_AMISTADES_solicitante_idToPERFILES AMISTADES[] @relation("AMISTADES_solicitante_idToPERFILES")
+  CARRERAS                                     CARRERAS?   @relation(fields: [carrera_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  USUARIOS                                     USUARIOS    @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model PUBLICACIONES {
+  id                                             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  autor_id                                       String           @db.Uuid
+  publicacion_origen_id                          String?          @db.Uuid
+  contenido                                      String?
+  tipo                                           String           @db.VarChar(10)
+  creado_en                                      DateTime         @default(now()) @db.Timestamptz(6)
+  eliminada_en                                   DateTime?        @db.Timestamptz(6)
+  eliminada_por                                  String?          @db.Uuid
+  COMENTARIOS                                    COMENTARIOS[]
+  MULTIMEDIA                                     MULTIMEDIA[]
+  NOTIFICACIONES                                 NOTIFICACIONES[]
+  USUARIOS_PUBLICACIONES_autor_idToUSUARIOS      USUARIOS         @relation("PUBLICACIONES_autor_idToUSUARIOS", fields: [autor_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  USUARIOS_PUBLICACIONES_eliminada_porToUSUARIOS USUARIOS?        @relation("PUBLICACIONES_eliminada_porToUSUARIOS", fields: [eliminada_por], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PUBLICACIONES                                  PUBLICACIONES?   @relation("PUBLICACIONESToPUBLICACIONES", fields: [publicacion_origen_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_PUBLICACIONES                            PUBLICACIONES[]  @relation("PUBLICACIONESToPUBLICACIONES")
+  REACCIONES                                     REACCIONES[]
+  REPORTES                                       REPORTES[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model REACCIONES {
+  usuario_id     String        @db.Uuid
+  publicacion_id String        @db.Uuid
+  tipo           String        @db.VarChar(12)
+  creado_en      DateTime      @default(now()) @db.Timestamptz(6)
+  PUBLICACIONES  PUBLICACIONES @relation(fields: [publicacion_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  USUARIOS       USUARIOS      @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([usuario_id, publicacion_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model REPORTES {
+  id                                               String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reportante_id                                    String         @db.Uuid
+  usuario_reportado_id                             String?        @db.Uuid
+  publicacion_id                                   String?        @db.Uuid
+  comentario_id                                    String?        @db.Uuid
+  grupo_id                                         String?        @db.Uuid
+  motivo                                           String         @db.VarChar(250)
+  descripcion                                      String?        @db.VarChar(500)
+  estado                                           String         @db.VarChar(12)
+  revisado_por                                     String?        @db.Uuid
+  creado_en                                        DateTime       @default(now()) @db.Timestamptz(6)
+  resuelto_en                                      DateTime?      @db.Timestamptz(6)
+  COMENTARIOS                                      COMENTARIOS?   @relation(fields: [comentario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  GRUPOS                                           GRUPOS?        @relation(fields: [grupo_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  PUBLICACIONES                                    PUBLICACIONES? @relation(fields: [publicacion_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  USUARIOS_REPORTES_reportante_idToUSUARIOS        USUARIOS       @relation("REPORTES_reportante_idToUSUARIOS", fields: [reportante_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  USUARIOS_REPORTES_revisado_porToUSUARIOS         USUARIOS?      @relation("REPORTES_revisado_porToUSUARIOS", fields: [revisado_por], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  USUARIOS_REPORTES_usuario_reportado_idToUSUARIOS USUARIOS?      @relation("REPORTES_usuario_reportado_idToUSUARIOS", fields: [usuario_reportado_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  SANCIONES                                        SANCIONES[]
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model ROLES {
+  nombre   String     @unique @db.VarChar(20)
+  id       Int        @id @default(autoincrement())
+  USUARIOS USUARIOS[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model SANCIONES {
+  id                                      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuario_id                              String    @db.Uuid
+  admin_id                                String    @db.Uuid
+  reporte_id                              String?   @db.Uuid
+  tipo                                    String    @db.VarChar(20)
+  motivo                                  String    @db.VarChar(300)
+  inicia_en                               DateTime  @default(now()) @db.Timestamptz(6)
+  termina_en                              DateTime? @db.Timestamptz(6)
+  activa                                  Boolean
+  USUARIOS_SANCIONES_admin_idToUSUARIOS   USUARIOS  @relation("SANCIONES_admin_idToUSUARIOS", fields: [admin_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  REPORTES                                REPORTES? @relation(fields: [reporte_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  USUARIOS_SANCIONES_usuario_idToUSUARIOS USUARIOS  @relation("SANCIONES_usuario_idToUSUARIOS", fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model USUARIOS {
+  id                                                  String           @id(map: "Usuarios_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  password_hash                                       String           @db.VarChar(255)
+  estado                                              String           @db.VarChar(12)
+  creado_en                                           DateTime         @default(now()) @db.Timestamptz(6)
+  ultimo_acceso                                       DateTime?        @db.Timestamptz(6)
+  correo_institucional                                String           @unique @db.VarChar(120)
+  rol_id                                              Int
+  AVISOS                                              AVISOS[]
+  BLOQUEOS_BLOQUEOS_bloqueado_idToUSUARIOS            BLOQUEOS[]       @relation("BLOQUEOS_bloqueado_idToUSUARIOS")
+  BLOQUEOS_BLOQUEOS_bloqueador_idToUSUARIOS           BLOQUEOS[]       @relation("BLOQUEOS_bloqueador_idToUSUARIOS")
+  CHATS                                               CHATS[]
+  COMENTARIOS                                         COMENTARIOS[]
+  GRUPOS                                              GRUPOS[]
+  MENSAJES                                            MENSAJES[]
+  MIEMBROS_CHAT                                       MIEMBROS_CHAT[]
+  MIEMBROS_GRUPO                                      MIEMBROS_GRUPO[]
+  NOTIFICACIONES_NOTIFICACIONES_actor_idToUSUARIOS    NOTIFICACIONES[] @relation("NOTIFICACIONES_actor_idToUSUARIOS")
+  NOTIFICACIONES_NOTIFICACIONES_usuario_idToUSUARIOS  NOTIFICACIONES[] @relation("NOTIFICACIONES_usuario_idToUSUARIOS")
+  PERFILES                                            PERFILES?
+  PUBLICACIONES_PUBLICACIONES_autor_idToUSUARIOS      PUBLICACIONES[]  @relation("PUBLICACIONES_autor_idToUSUARIOS")
+  PUBLICACIONES_PUBLICACIONES_eliminada_porToUSUARIOS PUBLICACIONES[]  @relation("PUBLICACIONES_eliminada_porToUSUARIOS")
+  REACCIONES                                          REACCIONES[]
+  REPORTES_REPORTES_reportante_idToUSUARIOS           REPORTES[]       @relation("REPORTES_reportante_idToUSUARIOS")
+  REPORTES_REPORTES_revisado_porToUSUARIOS            REPORTES[]       @relation("REPORTES_revisado_porToUSUARIOS")
+  REPORTES_REPORTES_usuario_reportado_idToUSUARIOS    REPORTES[]       @relation("REPORTES_usuario_reportado_idToUSUARIOS")
+  SANCIONES_SANCIONES_admin_idToUSUARIOS              SANCIONES[]      @relation("SANCIONES_admin_idToUSUARIOS")
+  SANCIONES_SANCIONES_usuario_idToUSUARIOS            SANCIONES[]      @relation("SANCIONES_usuario_idToUSUARIOS")
+  ROLES                                               ROLES            @relation(fields: [rol_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
