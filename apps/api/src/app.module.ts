@@ -21,6 +21,7 @@ import { SanctionsModule } from "./sanctions/sanctions.module.js";
 import { UsersModule } from "./users/users.module.js";
 import { FriendshipsController } from "./friendships/friendships.controller.js";
 import { FriendshipsModule } from "./friendships/friendships.module.js";
+import { StorageModule } from "./storage/storage.module.js";
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -28,6 +29,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
   imports: [
     ConfigModule.forRoot(),
     FriendshipsModule,
+    StorageModule,
     AnnouncementsModule,
     BlocksModule,
     CareersModule,
