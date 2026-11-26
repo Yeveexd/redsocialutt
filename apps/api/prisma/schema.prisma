@@ -192,8 +192,6 @@ model NOTIFICACIONES {
 model PERFILES {
   id                                           String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   usuario_id                                   String      @unique @db.Uuid
-  nombre                                       String      @db.VarChar(80)
-  apellidos                                    String      @db.VarChar(100)
   matricula                                    String?     @unique @db.VarChar(20)
   carrera_id                                   Int?
   cuatrimestre                                 Int?        @db.SmallInt
@@ -306,6 +304,8 @@ model USUARIOS {
   ultimo_acceso                                       DateTime?        @db.Timestamptz(6)
   correo_institucional                                String           @unique @db.VarChar(120)
   rol_id                                              Int
+  nombre                                              String           @db.VarChar
+  apellidos                                           String           @db.VarChar
   AVISOS                                              AVISOS[]
   BLOQUEOS_BLOQUEOS_bloqueado_idToUSUARIOS            BLOQUEOS[]       @relation("BLOQUEOS_bloqueado_idToUSUARIOS")
   BLOQUEOS_BLOQUEOS_bloqueador_idToUSUARIOS           BLOQUEOS[]       @relation("BLOQUEOS_bloqueador_idToUSUARIOS")
