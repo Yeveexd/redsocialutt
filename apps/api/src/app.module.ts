@@ -22,12 +22,13 @@ import { UsersModule } from "./users/users.module.js";
 import { FriendshipsController } from "./friendships/friendships.controller.js";
 import { FriendshipsModule } from "./friendships/friendships.module.js";
 import { StorageModule } from "./storage/storage.module.js";
-
+import { PrismaModule } from "./prisma/prisma.module.js";
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    PrismaModule,
     FriendshipsModule,
     StorageModule,
     AnnouncementsModule,
