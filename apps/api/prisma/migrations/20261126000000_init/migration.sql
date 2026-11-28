@@ -1,0 +1,378 @@
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "public";
+
+-- CreateTable
+CREATE TABLE "AMISTADES" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "solicitante_id" UUID NOT NULL,
+    "receptor_id" UUID NOT NULL,
+    "estado" VARCHAR(10) NOT NULL,
+    "creado_en" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "respondido_en" TIMESTAMPTZ(6),
+
+    CONSTRAINT "AMISTADES_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "AVISOS" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "autor_id" UUID NOT NULL,
+    "titulo" VARCHAR(150) NOT NULL,
+    "contenido" TEXT NOT NULL,
+    "categoria" VARCHAR(15) NOT NULL,
+    "urgente" BOOLEAN NOT NULL,
+    "alcance" VARCHAR(10) NOT NULL,
+    "carrera_id" INTEGER,
+    "cuatrimestre" SMALLINT,
+    "publicado_en" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "AVISOS_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "BLOQUEOS" (
+    "bloqueador_id" UUID NOT NULL,
+    "bloqueado_id" UUID NOT NULL,
+    "creado_en" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "BLOQUEOS_pkey" PRIMARY KEY ("bloqueador_id","bloqueado_id")
+);
+
+-- CreateTable
+CREATE TABLE "CARRERAS" (
+    "id" SERIAL NOT NULL,
+    "nombre" VARCHAR(100) NOT NULL,
+    "edificio" VARCHAR(100) NOT NULL,
+
+    CONSTRAINT "CARRERAS_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "CHATS" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "tipo" VARCHAR(10) NOT NULL,
+    "nombre" VARCHAR(100),
+    "creador_id" UUID NOT NULL,
+    "creado_en" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "CHATS_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "COMENTARIOS" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "publicacion_id" UUID NOT NULL,
+    "autor_id" UUID NOT NULL,
+    "contenido" VARCHAR(500) NOT NULL,
+    "creado_en" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "eliminado_en" TIMESTAMPTZ(6),
+
+    CONSTRAINT "COMENTARIOS_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "GRUPOS" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "nombre" VARCHAR(100) NOT NULL,
+    "descripcion" VARCHAR(300),
+    "imagen_url" TEXT,
+    "tipo" VARCHAR(15) NOT NULL,
+    "privacidad" VARCHAR(10) NOT NULL,
+    "carrera_id" INTEGER,
+    "creador_id" UUID NOT NULL,
+    "creado_en" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "GRUPOS_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "MENSAJES" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "chat_id" UUID NOT NULL,
+    "remitente_id" UUID NOT NULL,
+    "contenido" TEXT,
+    "enviado_en" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "MENSAJES_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "MIEMBROS_CHAT" (
+    "chat_id" UUID NOT NULL,
+    "usuario_id" UUID NOT NULL,
+    "rol" VARCHAR(13) NOT NULL,
+    "fijado" BOOLEAN NOT NULL DEFAULT false,
+    "archivado" BOOLEAN NOT NULL DEFAULT false,
+    "eliminado" BOOLEAN NOT NULL DEFAULT false,
+    "unido_en" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "MIEMBROS_CHAT_pkey" PRIMARY KEY ("chat_id","usuario_id")
+);
+
+-- CreateTable
+CREATE TABLE "MIEMBROS_GRUPO" (
+    "grupo_id" UUID NOT NULL,
+    "usuario_id" UUID NOT NULL,
+    "rol" VARCHAR(13) NOT NULL,
+    "unido_en" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "MIEMBROS_GRUPO_pkey" PRIMARY KEY ("grupo_id","usuario_id")
+);
+
+-- CreateTable
+CREATE TABLE "MULTIMEDIA" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "publicacion_id" UUID,
+    "mensaje_id" UUID,
+    "tipo" VARCHAR(10) NOT NULL,
+    "url" TEXT NOT NULL,
+    "mime_type" VARCHAR(50) NOT NULL,
+    "tamano_bytes" BIGINT NOT NULL,
+    "creado_en" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "MULTIMEDIA_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "NOTIFICACIONES" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "usuario_id" UUID NOT NULL,
+    "actor_id" UUID,
+    "tipo" VARCHAR(20) NOT NULL,
+    "aviso_id" UUID,
+    "publicacion_id" UUID,
+    "leida" BOOLEAN NOT NULL DEFAULT false,
+    "creado_en" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "NOTIFICACIONES_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "PERFILES" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "usuario_id" UUID NOT NULL,
+    "matricula" VARCHAR(20),
+    "carrera_id" INTEGER,
+    "cuatrimestre" SMALLINT,
+    "biografia" VARCHAR(500),
+    "avatar_url" TEXT,
+    "color_fondo_perfil" VARCHAR(20),
+    "perfil_privado" BOOLEAN NOT NULL DEFAULT false,
+
+    CONSTRAINT "PERFILES_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "PUBLICACIONES" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "autor_id" UUID NOT NULL,
+    "publicacion_origen_id" UUID,
+    "contenido" TEXT,
+    "tipo" VARCHAR(10) NOT NULL,
+    "creado_en" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "eliminada_en" TIMESTAMPTZ(6),
+    "eliminada_por" UUID,
+
+    CONSTRAINT "PUBLICACIONES_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "REACCIONES" (
+    "usuario_id" UUID NOT NULL,
+    "publicacion_id" UUID NOT NULL,
+    "tipo" VARCHAR(12) NOT NULL,
+    "creado_en" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "REACCIONES_pkey" PRIMARY KEY ("usuario_id","publicacion_id")
+);
+
+-- CreateTable
+CREATE TABLE "REPORTES" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "reportante_id" UUID NOT NULL,
+    "usuario_reportado_id" UUID,
+    "publicacion_id" UUID,
+    "comentario_id" UUID,
+    "grupo_id" UUID,
+    "motivo" VARCHAR(250) NOT NULL,
+    "descripcion" VARCHAR(500),
+    "estado" VARCHAR(12) NOT NULL,
+    "revisado_por" UUID,
+    "creado_en" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "resuelto_en" TIMESTAMPTZ(6),
+
+    CONSTRAINT "REPORTES_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ROLES" (
+    "nombre" VARCHAR(20) NOT NULL,
+    "id" SERIAL NOT NULL,
+
+    CONSTRAINT "ROLES_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "SANCIONES" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "usuario_id" UUID NOT NULL,
+    "admin_id" UUID NOT NULL,
+    "reporte_id" UUID,
+    "tipo" VARCHAR(20) NOT NULL,
+    "motivo" VARCHAR(300) NOT NULL,
+    "inicia_en" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "termina_en" TIMESTAMPTZ(6),
+    "activa" BOOLEAN NOT NULL,
+
+    CONSTRAINT "SANCIONES_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "USUARIOS" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "password_hash" VARCHAR(255) NOT NULL,
+    "estado" VARCHAR(12) NOT NULL,
+    "creado_en" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "ultimo_acceso" TIMESTAMPTZ(6),
+    "correo_institucional" VARCHAR(120) NOT NULL,
+    "rol_id" INTEGER NOT NULL,
+    "nombre" VARCHAR NOT NULL,
+    "apellidos" VARCHAR NOT NULL,
+
+    CONSTRAINT "Usuarios_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "CARRERAS_nombre_key" ON "CARRERAS"("nombre");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "PERFILES_usuario_id_key" ON "PERFILES"("usuario_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "PERFILES_matricula_key" ON "PERFILES"("matricula");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ROLES_nombre_key" ON "ROLES"("nombre");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "USUARIOS_correo_institucional_key" ON "USUARIOS"("correo_institucional");
+
+-- AddForeignKey
+ALTER TABLE "AMISTADES" ADD CONSTRAINT "AMISTADES_receptor_id_fkey" FOREIGN KEY ("receptor_id") REFERENCES "PERFILES"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "AMISTADES" ADD CONSTRAINT "AMISTADES_solicitante_id_fkey" FOREIGN KEY ("solicitante_id") REFERENCES "PERFILES"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "AVISOS" ADD CONSTRAINT "AVISOS_autor_id_fkey" FOREIGN KEY ("autor_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "AVISOS" ADD CONSTRAINT "AVISOS_carrera_id_fkey" FOREIGN KEY ("carrera_id") REFERENCES "CARRERAS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "BLOQUEOS" ADD CONSTRAINT "BLOQUEOS_bloqueado_id_fkey" FOREIGN KEY ("bloqueado_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "BLOQUEOS" ADD CONSTRAINT "BLOQUEOS_bloqueador_id_fkey" FOREIGN KEY ("bloqueador_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "CHATS" ADD CONSTRAINT "CHATS_creador_id_fkey" FOREIGN KEY ("creador_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "COMENTARIOS" ADD CONSTRAINT "COMENTARIOS_autor_id_fkey" FOREIGN KEY ("autor_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "COMENTARIOS" ADD CONSTRAINT "COMENTARIOS_publicacion_id_fkey" FOREIGN KEY ("publicacion_id") REFERENCES "PUBLICACIONES"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "GRUPOS" ADD CONSTRAINT "GRUPOS_carrera_id_fkey" FOREIGN KEY ("carrera_id") REFERENCES "CARRERAS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "GRUPOS" ADD CONSTRAINT "GRUPOS_creador_id_fkey" FOREIGN KEY ("creador_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "MENSAJES" ADD CONSTRAINT "MENSAJES_chat_id_fkey" FOREIGN KEY ("chat_id") REFERENCES "CHATS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "MENSAJES" ADD CONSTRAINT "MENSAJES_remitente_id_fkey" FOREIGN KEY ("remitente_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "MIEMBROS_CHAT" ADD CONSTRAINT "MIEMBROS_CHAT_chat_id_fkey" FOREIGN KEY ("chat_id") REFERENCES "CHATS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "MIEMBROS_CHAT" ADD CONSTRAINT "MIEMBROS_CHAT_usuario_id_fkey" FOREIGN KEY ("usuario_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "MIEMBROS_GRUPO" ADD CONSTRAINT "MIEMBROS_GRUPO_grupo_id_fkey" FOREIGN KEY ("grupo_id") REFERENCES "GRUPOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "MIEMBROS_GRUPO" ADD CONSTRAINT "MIEMBROS_GRUPO_usuario_id_fkey" FOREIGN KEY ("usuario_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "MULTIMEDIA" ADD CONSTRAINT "MULTIMEDIA_mensaje_id_fkey" FOREIGN KEY ("mensaje_id") REFERENCES "MENSAJES"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "MULTIMEDIA" ADD CONSTRAINT "MULTIMEDIA_publicacion_id_fkey" FOREIGN KEY ("publicacion_id") REFERENCES "PUBLICACIONES"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "NOTIFICACIONES" ADD CONSTRAINT "NOTIFICACIONES_actor_id_fkey" FOREIGN KEY ("actor_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "NOTIFICACIONES" ADD CONSTRAINT "NOTIFICACIONES_aviso_id_fkey" FOREIGN KEY ("aviso_id") REFERENCES "AVISOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "NOTIFICACIONES" ADD CONSTRAINT "NOTIFICACIONES_publicacion_id_fkey" FOREIGN KEY ("publicacion_id") REFERENCES "PUBLICACIONES"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "NOTIFICACIONES" ADD CONSTRAINT "NOTIFICACIONES_usuario_id_fkey" FOREIGN KEY ("usuario_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "PERFILES" ADD CONSTRAINT "PERFILES_carrera_id_fkey" FOREIGN KEY ("carrera_id") REFERENCES "CARRERAS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "PERFILES" ADD CONSTRAINT "PERFILES_usuario_id_fkey" FOREIGN KEY ("usuario_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "PUBLICACIONES" ADD CONSTRAINT "PUBLICACIONES_autor_id_fkey" FOREIGN KEY ("autor_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "PUBLICACIONES" ADD CONSTRAINT "PUBLICACIONES_eliminada_por_fkey" FOREIGN KEY ("eliminada_por") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "PUBLICACIONES" ADD CONSTRAINT "PUBLICACIONES_publicacion_origen_id_fkey" FOREIGN KEY ("publicacion_origen_id") REFERENCES "PUBLICACIONES"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "REACCIONES" ADD CONSTRAINT "REACCIONES_publicacion_id_fkey" FOREIGN KEY ("publicacion_id") REFERENCES "PUBLICACIONES"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "REACCIONES" ADD CONSTRAINT "REACCIONES_usuario_id_fkey" FOREIGN KEY ("usuario_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "REPORTES" ADD CONSTRAINT "REPORTES_comentario_id_fkey" FOREIGN KEY ("comentario_id") REFERENCES "COMENTARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "REPORTES" ADD CONSTRAINT "REPORTES_grupo_id_fkey" FOREIGN KEY ("grupo_id") REFERENCES "GRUPOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "REPORTES" ADD CONSTRAINT "REPORTES_publicacion_id_fkey" FOREIGN KEY ("publicacion_id") REFERENCES "PUBLICACIONES"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "REPORTES" ADD CONSTRAINT "REPORTES_reportante_id_fkey" FOREIGN KEY ("reportante_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "REPORTES" ADD CONSTRAINT "REPORTES_revisado_por_fkey" FOREIGN KEY ("revisado_por") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "REPORTES" ADD CONSTRAINT "REPORTES_usuario_reportado_id_fkey" FOREIGN KEY ("usuario_reportado_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "SANCIONES" ADD CONSTRAINT "SANCIONES_admin_id_fkey" FOREIGN KEY ("admin_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "SANCIONES" ADD CONSTRAINT "SANCIONES_reporte_id_fkey" FOREIGN KEY ("reporte_id") REFERENCES "REPORTES"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "SANCIONES" ADD CONSTRAINT "SANCIONES_usuario_id_fkey" FOREIGN KEY ("usuario_id") REFERENCES "USUARIOS"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "USUARIOS" ADD CONSTRAINT "USUARIOS_rol_id_fkey" FOREIGN KEY ("rol_id") REFERENCES "ROLES"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
